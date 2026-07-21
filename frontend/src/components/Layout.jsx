@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Box, Drawer, AppBar, Toolbar, List, Typography, Divider, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { Menu, Home, Package, LogOut, ClipboardList, Truck } from 'lucide-react';
+import { Menu, Home, Package, LogOut, ClipboardList, Truck, ShieldAlert, Settings } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 const drawerWidth = 240;
 
@@ -10,6 +11,17 @@ export default function Layout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const token = localStorage.getItem('erp_token');
+  let isSuperuser = false;
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      isSuperuser = decoded.is_superuser === true;
+    } catch (e) {
+      console.error("Token decoding error", e);
+    }
+  }
+
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   const handleLogout = () => {
@@ -17,12 +29,17 @@ export default function Layout({ children }) {
     navigate('/login');
   };
 
-  const menuItems = [
+  const baseMenuItems = [
     { text: 'Dashboard', icon: <Home size={20} />, path: '/dashboard' },
     { text: 'Inventario', icon: <Package size={20} />, path: '/inventory' },
     { text: 'En Tránsito', icon: <Truck size={20} />, path: '/transfers' },
     { text: 'Kardex (Historial)', icon: <ClipboardList size={20} />, path: '/kardex' },
+    { text: 'Configuración', icon: <Settings size={20} />, path: '/settings' },
   ];
+
+  const menuItems = isSuperuser 
+    ? [...baseMenuItems, { text: 'Panel Súper Admin', icon: <ShieldAlert size={20} color="#ef4444" />, path: '/super-admin' }] 
+    : baseMenuItems;
 
   const drawer = (
     <div>

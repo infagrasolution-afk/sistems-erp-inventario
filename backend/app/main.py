@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.middleware.tenant import TenantMiddleware
-from app.api import auth, inventory
+from app.api import auth, inventory, admin
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
@@ -21,6 +21,7 @@ app.add_middleware(TenantMiddleware)
 # Rutas
 app.include_router(auth.router)
 app.include_router(inventory.router)
+app.include_router(admin.router)
 
 @app.get("/")
 def read_root():

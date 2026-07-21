@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Inventory from './pages/Inventory';
 import Kardex from './pages/Kardex';
 import Transfers from './pages/Transfers';
+import AdminPanel from './pages/AdminPanel';
 import { SnackbarProvider } from './contexts/SnackbarContext';
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/transfers" element={<Transfers />} />
           <Route path="/kardex" element={<Kardex />} />
+          <Route path="/super-admin" element={<AdminPanel />} />
         </Routes>
       </Layout>
     </SnackbarProvider>
