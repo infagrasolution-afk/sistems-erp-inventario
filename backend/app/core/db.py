@@ -1,13 +1,13 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy import event
-from sqlalchemy.orm import ORMExecuteState
+from sqlalchemy.orm import ORMExecuteState, Session
 from app.core.config import settings
 from app.middleware.tenant import tenant_id, is_superuser_ctx
 
 engine = create_async_engine(settings.DATABASE_URL, echo=False)
 AsyncSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
-@event.listens_for(AsyncSessionLocal.sync_session_class, "do_orm_execute")
+@event.listens_for(Session, "do_orm_execute")
 def receive_do_orm_execute(orm_execute_state: ORMExecuteState):
     """
     Filtro Global Multi-Tenant.
