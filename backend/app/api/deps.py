@@ -20,10 +20,20 @@ async def get_current_user_id(token: str = Depends(oauth2_scheme)) -> int:
     except JWTError:
         raise credentials_exception
 
-async def get_current_superuser(current_user: User = Depends(get_current_user)) -> User:
-    if not current_user.is_superuser:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user doesn't have enough privileges"
-        )
-    return current_user
+async def get_current_superuser(token: str = Depends(oauth2_scheme)) -> int:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        is_superuser = payload.get("is_superuser", False)
+        if not is_superuser:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="The user doesn't have enough privileges"
+            )
+        return int(payload.get("sub"))
+    except JWTError:
+        raise credentials_exception
