@@ -3,13 +3,13 @@
   "name": "Sistems ERP Multi-Tenant",
   "icons": [
     {
-      "src": "/vite.svg",
-      "type": "image/svg+xml",
+      "src": "/logo.png",
+      "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/vite.svg",
-      "type": "image/svg+xml",
+      "src": "/logo.png",
+      "type": "image/png",
       "sizes": "512x512"
     }
   ],
